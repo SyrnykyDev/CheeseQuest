@@ -1,0 +1,15 @@
+spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: npg_e4PVUdKYwDZ0
+        username: neondb_owner
+        url: jdbc:postgresql://ep-spring-field-a2anicp8-pooler.eu-central-1.aws.neon.tech/neondb
+    jpa:
+        properties.hibernate:
+            show_sql: true
+            format_sql: true
+            hbm2ddl.auto: validate
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
