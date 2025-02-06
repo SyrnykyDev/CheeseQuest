@@ -1,0 +1,11 @@
+// *** DECRLARATIVE PART ***
+@import "../../style";
+$footerHeight: 150px;
+.footer{
+
+  display: flex;
+  width: 100%;
+  height: $footerHeight;
+  background-color: $global_darker;
+
+}
