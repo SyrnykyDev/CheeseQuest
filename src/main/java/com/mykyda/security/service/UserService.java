@@ -20,33 +20,26 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public User update(User user) {
         return user;
     }
 
-    public User reg(String username, String email, String password, Role role) {
-        return null;
+    public User reg(String email, String password, Role role) {
+        return userRepository.save(User.builder()
+                .role(role)
+                .username("User" + email.hashCode() * System.currentTimeMillis() / 1000)
+                .email(email)
+                .avatar("none.png")
+                .password(passwordEncoder.encode(password)).build());
     }
-
-
-//    public void login(LoginData loginData, Model model) {
-//        var user = userRepository.findByEmail(loginData.getEmail());
-//        if (user.isPresent()) {
-//            System.out.println(user.get());
-//            if (user.get().getPassword().equals(loginData.getPassword())) {
-//                model.addAttribute("user", user);
-//                model.addAttribute("logged", true);
-//            }
-//        }
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByEmail(username)
                 .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
+                        user.getEmail(),
                         user.getPassword(),
                         Collections.singleton(user.getRole())
                 )).orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve username " + username));
