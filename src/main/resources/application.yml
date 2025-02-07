@@ -8,8 +8,10 @@ spring:
         properties.hibernate:
             show_sql: true
             format_sql: true
-            hbm2ddl.auto: validate
+            hbm2ddl.auto: update
     mvc:
         view:
             prefix: /WEB-INF/jsp/
             suffix: .jsp
+    flyway:
+        baseline-on-migrate: true
