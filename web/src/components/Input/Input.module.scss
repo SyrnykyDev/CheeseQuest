@@ -1,7 +1,45 @@
+// *** DECLARATIVE PART ***
+
+
+@keyframes input-onText {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.015);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .input{
 
-  &_input{
+  &_sans {
+    position: relative;
+    input {
+      border-radius: 10px ;
+      padding: 10px;
+      background-color: white;
+      color: black;
+      font-family: "Comic Sans MS";
+      font-weight: 600;
 
+      &::placeholder{
+        font-weight: 800;
+        color: gray;
+    }
+      &:focus{
+        outline: none;
+        background-color: white;
+      }
+    }
+    &_required{
+
+    }
+  }
+  &_anim {
+    animation: input-onText 170ms;
   }
 
 }
