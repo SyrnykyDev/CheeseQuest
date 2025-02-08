@@ -9,9 +9,17 @@ $height: 70px;
 
 
   height: $height;
-  background-color: $global_darker;
+  background-color: $global;
   width: 100%;
   position: fixed;
+  display: flex;
+
+  &_rightPart{
+    margin: auto 20px auto auto;
+    display: flex;
+    gap: 10px;
+
+  }
 
 
 }
