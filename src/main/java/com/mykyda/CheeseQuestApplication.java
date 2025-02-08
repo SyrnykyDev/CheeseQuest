@@ -9,8 +9,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CheeseQuestApplication {
     public static void main(String[] args) {
         var context = SpringApplication.run(CheeseQuestApplication.class, args);
-//        var userService = context.getBean(UserService.class);
-//        System.out.println("Created: " +
-//                userService.reg("8x2@gmail.com", "22222222", Role.USER));
     }
 }

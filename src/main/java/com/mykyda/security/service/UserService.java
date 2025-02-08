@@ -4,15 +4,15 @@ import com.mykyda.security.database.entity.Role;
 import com.mykyda.security.database.entity.User;
 import com.mykyda.security.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +26,35 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User reg(String email, String password, Role role) {
-        return userRepository.save(User.builder()
-                .role(role)
-                .username("User" + email.hashCode() * System.currentTimeMillis() / 1000)
-                .email(email)
-                .avatar("none.png")
-                .password(passwordEncoder.encode(password)).build());
+
+    public ResponseEntity<User> register(String username, String email, String password) {
+        if (userRepository.findByEmail(email).isEmpty()) {
+            var user = User.builder()
+                    .role(Role.USER)
+                    .username(username)
+                    .email(email)
+                    .avatar("none.png")
+                    .password(passwordEncoder.encode(password))
+                    .build();
+            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    public ResponseEntity<User> register(String email, String password, Role role) {
+        if (userRepository.findByEmail(email).isEmpty()) {
+            var user = User.builder()
+                    .role(role)
+                    .username("user" + System.currentTimeMillis() * email.hashCode() / 100000)
+                    .email(email)
+                    .avatar("none.png")
+                    .password(passwordEncoder.encode(password))
+                    .build();
+            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @Override
@@ -45,9 +67,9 @@ public class UserService implements UserDetailsService {
                 )).orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve username " + username));
     }
 
-    public User findById(Long id) {
+    public ResponseEntity<User> findById(Long id) {
         var optUser = userRepository.findById(id);
-        return optUser.orElse(null);
+        return optUser.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 }
