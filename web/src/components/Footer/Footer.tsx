@@ -20,8 +20,12 @@ interface footerColumn {
 
 const footerArray: footerColumn[] = [
   {
-    title: "Test1",
-    linksArray: [{ href: "/test", text: "smth", disabled: false }],
+    title: "Links",
+    linksArray: [
+      { href: "/profile", text: "Profile", disabled: false },
+      { href: "/register", text: "Register", disabled: false },
+      { href: "/login", text: "Log In", disabled: false },
+    ],
   },
   {
     title: "Test2",
@@ -33,11 +37,11 @@ const Footer = (props: FooterProps) => {
   const {} = props;
   return (
     <footer className={styles.footer}>
-      11111
       {footerArray.map((column) => (
-        <div key={column.title}>
+        <div key={column.title} className={styles.footer_column}>
+          <h4 className={styles.footer_column_title}>{column.title}</h4>
           {column.linksArray.map((link: footerLink) => (
-            <div key={link.href}>
+            <div key={link.href} className={styles.footer_column_elem}>
               <Link href={link.href}>{link.text}</Link>
             </div>
           ))}

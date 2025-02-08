@@ -1,11 +1,35 @@
-// *** DECRLARATIVE PART ***
+// *** DECLARATIVE PART ***
 @import "../../style";
+
 $footerHeight: 150px;
 .footer{
 
   display: flex;
   width: 100%;
-  height: $footerHeight;
-  background-color: $global_darker;
+  min-height: $footerHeight;
+  background-color: #492c01;
+  padding: 20px 200px;
+  margin: auto;
+  color: #fff6e6;
+  justify-content: space-evenly;
+  &_column{
+    text-align: center;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    //margin: auto;
+    &_title{
+      text-decoration: underline;
+      font-size: 24px;
+
+    }
+    &_elem{
+      transition-duration: .5s;
+        &:hover{
+          color: yellow;
+
+        }
+    }
+  }
 
 }
