@@ -3,7 +3,7 @@ import Header from "@/components/header/header";
 import Footer from "@/components/Footer/Footer";
 
 // *** STYLES ***
-import styles from "./styles.module.scss";
+import styles from "./wrapper.module.scss";
 
 interface WrapperProps {
   children: ReactNode;
