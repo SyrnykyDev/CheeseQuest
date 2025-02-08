@@ -1,0 +1,21 @@
+@import "../../style";
+.sansWrapper{
+  padding: 16px 26px;
+  width: max-content;
+  height: max-content;
+  background-color: $global;
+  border-radius: 12px;
+  border: 2px solid black;
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 3px 5px 2px 3px #c8c8c8;
+
+  &_center{
+    height: 100%;
+    margin: auto;
+  }
+}
