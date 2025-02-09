@@ -1,4 +1,4 @@
-package com.mykyda.security.database.dto;
+package com.mykyda.security.dto;
 
 import lombok.Getter;
 import lombok.Setter;
