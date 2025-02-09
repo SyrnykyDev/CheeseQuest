@@ -45,9 +45,10 @@ public class SecurityConfig {
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         return userRequest -> {
             String email = userRequest.getIdToken().getClaim("email");
-            //Todo : create user userService.save
+            if (userService.findByEmail(email)==null){
+                  userService.save(userRequest.getIdToken().getClaims());
+            }
             UserDetails userDetails = userService.loadUserByUsername(email);
-//            new OidcUserService().loadUser();
             var oidcUser = new DefaultOidcUser(userDetails.getAuthorities(), userRequest.getIdToken());
 
             Set<Method> userDetailsMethods = Set.of(UserDetails.class.getMethods());
@@ -57,6 +58,6 @@ public class SecurityConfig {
                     (proxy, method, args) -> userDetailsMethods.contains(method)
                             ? method.invoke(userDetails, args)
                             : method.invoke(oidcUser, args));
-        };                                                  
+        };
     }
 }
