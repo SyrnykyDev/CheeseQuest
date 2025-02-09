@@ -15,11 +15,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
                         .anyRequest().permitAll()
-                );
-//                .formLogin(login -> login
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/user")
-//                        .permitAll());
+                )
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/user")
+                        .permitAll());
         return http.build();
     }
 

@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public ResponseEntity<User> register(String username, String email, String password) {
+    public ResponseEntity<?> register(String username, String email, String password) {
         if (userRepository.findByEmail(email).isEmpty()) {
             var user = User.builder()
                     .role(Role.USER)
@@ -36,13 +36,14 @@ public class UserService implements UserDetailsService {
                     .avatar("none.png")
                     .password(passwordEncoder.encode(password))
                     .build();
-            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+            userRepository.save(user);
+            return new ResponseEntity<>(Collections.singletonMap("message", "Користувач успішно зареєстрований"), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(Collections.singletonMap("error", "Email вже використовується"), HttpStatus.CONFLICT);
         }
     }
 
-    public ResponseEntity<User> register(String email, String password, Role role) {
+    public ResponseEntity<?> register(String email, String password, Role role) {
         if (userRepository.findByEmail(email).isEmpty()) {
             var user = User.builder()
                     .role(role)
@@ -51,9 +52,10 @@ public class UserService implements UserDetailsService {
                     .avatar("none.png")
                     .password(passwordEncoder.encode(password))
                     .build();
-            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+            userRepository.save(user);
+            return new ResponseEntity<>(Collections.singletonMap("message", "Користувач успішно зареєстрований"), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(Collections.singletonMap("error", "Email вже використовується"), HttpStatus.CONFLICT);
         }
     }
 
