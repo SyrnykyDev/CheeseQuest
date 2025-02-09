@@ -1,17 +1,16 @@
 package com.mykyda.security.controller;
 
 import com.mykyda.security.dto.UserCreateDto;
-import com.mykyda.security.database.entity.User;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("api/registration")
 @RequiredArgsConstructor
 public class RegistrationController {
