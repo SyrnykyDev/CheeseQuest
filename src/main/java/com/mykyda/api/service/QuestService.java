@@ -20,9 +20,10 @@ public class QuestService {
     public ResponseEntity<?> findById(Long id) {
         var quest = questRepository.findById(id).get();
         if (quest == null){
-            return new ResponseEntity<>(quest,HttpStatus.OK);
-        } else {
             return new ResponseEntity<>(Collections.singletonMap("message","no quest with such id"),HttpStatus.NOT_FOUND);
+        } else {
+
+            return new ResponseEntity<>(quest,HttpStatus.OK);
         }
     }
 
