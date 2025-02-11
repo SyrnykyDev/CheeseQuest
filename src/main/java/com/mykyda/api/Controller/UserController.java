@@ -1,13 +1,10 @@
-package com.mykyda.api.Controller;
+package com.mykyda.api.controller;
 
-import com.mykyda.api.service.QuestService;
+import com.mykyda.api.dto.ProfileEditDto;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -23,8 +20,13 @@ public class UserController {
         return userService.findByPrincipal(principal);
     }
 
-//    @GetMapping("/{id}/history")
-//    public ResponseEntity<?> getProfileHistory(@PathVariable Long id) {
-//        return userService.findById(id);
-//    }
+    @GetMapping("/edit")
+    public ResponseEntity<?> getProfileEdit(Principal principal) {
+        return getProfile(principal);
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<?> postProfileEdit(@RequestBody ProfileEditDto peDto, Principal principal) {
+        return userService.save(peDto, principal);
+    }
 }

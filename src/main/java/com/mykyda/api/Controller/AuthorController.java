@@ -1,6 +1,6 @@
-package com.mykyda.api.Controller;
+package com.mykyda.api.controller;
 
-import com.mykyda.api.service.AuthorService;
+import com.mykyda.api.service.AuthorsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthorController {
 
-    private final AuthorService authorService;
+    private final AuthorsService authorService;
 
     @GetMapping
     public ResponseEntity<?> getAuthors() {

@@ -1,4 +1,4 @@
-package com.mykyda.api.Controller;
+package com.mykyda.api.controller;
 
 import com.mykyda.api.service.QuestService;
 import lombok.RequiredArgsConstructor;

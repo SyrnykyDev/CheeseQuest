@@ -1,5 +1,7 @@
 package com.mykyda.security.service;
 
+import com.mykyda.api.dto.ProfileEditDto;
+import com.mykyda.api.dto.UserDemoDto;
 import com.mykyda.security.database.entity.Role;
 import com.mykyda.security.database.entity.User;
 import com.mykyda.security.database.repository.UserRepository;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -79,15 +80,23 @@ public class UserService implements UserDetailsService {
         return optUser.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    public ResponseEntity<?> save(Map<String, Object> claims) {
+    public ResponseEntity<?> create(Map<String, Object> claims) {
         var user = User.builder()
                 .role(Role.USER)
                 .email(claims.get("email").toString())
                 .avatar(claims.get("picture").toString())
                 .username(claims.get("name").toString())
-                .password(passwordEncoder.encode(String.valueOf(System.currentTimeMillis()*claims.hashCode())))
+                .password(passwordEncoder.encode(String.valueOf(System.currentTimeMillis() * claims.hashCode())))
                 .build();
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<?> save(ProfileEditDto peDto, Principal principal) {
+        var user = userRepository.findByEmail(principal.getName()).get();
+        user.setAvatar(peDto.getAvatar());
+        user.setUsername(peDto.getUsername());
+        userRepository.save(user);
+        return new ResponseEntity<>(Collections.singletonMap("message", "user successfully updated"), HttpStatus.OK);
     }
 
     public User findByEmail(String email) {
@@ -95,11 +104,14 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<?> findByPrincipal(Principal principal) {
-        var user = userRepository.findByEmail(principal.getName());
-        if (user.isEmpty()){
-            return new ResponseEntity<>(Collections.singletonMap("message","such user don`t exist"),HttpStatus.NOT_FOUND);
+        var user = userRepository.findByEmail(principal.getName()).get();
+        if (user == null) {
+            return new ResponseEntity<>(Collections.singletonMap("message", "such user don`t exist"), HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(user,HttpStatus.OK);
+            return new ResponseEntity<>(new UserDemoDto(user.getAvatar()
+                    , user.getUsername()
+                    , user.getEmail()
+                    , user.getRole()), HttpStatus.OK);
         }
-        }
+    }
 }

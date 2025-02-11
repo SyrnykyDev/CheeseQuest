@@ -32,10 +32,10 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
-                        .defaultSuccessUrl("/user")
+                        .defaultSuccessUrl("/api/user")
                         .permitAll())
                 .oauth2Login(login -> login
-                        .defaultSuccessUrl("/user")
+                        .defaultSuccessUrl("/api/user")
                         .permitAll()
                         .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
         return http.build();
@@ -46,7 +46,7 @@ public class SecurityConfig {
         return userRequest -> {
             String email = userRequest.getIdToken().getClaim("email");
             if (userService.findByEmail(email)==null){
-                  userService.save(userRequest.getIdToken().getClaims());
+                  userService.create(userRequest.getIdToken().getClaims());
             }
             UserDetails userDetails = userService.loadUserByUsername(email);
             var oidcUser = new DefaultOidcUser(userDetails.getAuthorities(), userRequest.getIdToken());
