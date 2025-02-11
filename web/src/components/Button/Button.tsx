@@ -6,39 +6,30 @@ import styles from "./Button.module.scss";
 
 interface IButtonProps
   extends React.HTMLAttributes<ButtonHTMLAttributes<never>> {
-  buttonType?: "sans";
+  buttonType?: "sans" | "round";
   buttonColor?: "green" | "blue" | "orange" | "gray";
+  active?: boolean;
 }
 
 const Button = (props: IButtonProps) => {
-  const { children, buttonType = "sans", buttonColor = "green" } = props;
+  const {
+    children,
+    active,
+    buttonType = "sans",
+    buttonColor = "green",
+    ...otherProps
+  } = props;
 
   let style = "";
-  switch (buttonType) {
-    case "sans":
-      style = `${styles.button_common_sans} `;
-      switch (buttonColor) {
-        case "blue":
-          style += ` ${styles.button_blue}`;
-          break;
-        case "green":
-          style += ` ${styles.button_green}`;
-          break;
-        case "orange":
-          style += ` ${styles.button_orange}`;
-          break;
-
-        case "gray":
-          style += ` ${styles.button_gray}`;
-          break;
-      }
-
-      break;
-  }
+  style = `${styles["button_" + buttonType]}`;
+  style += ` ${styles["button_" + buttonType + "_" + buttonColor]}`;
+  if (active) style += ` ${styles["button_" + buttonType + "__" + "active"]}`;
 
   return (
     <div>
-      <button className={style}>{children}</button>
+      <button className={style} {...otherProps}>
+        {children}
+      </button>
     </div>
   );
 };
