@@ -1,9 +1,11 @@
 spring:
+  config:
+    import: file:.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: npg_e4PVUdKYwDZ0
-    username: neondb_owner
-    url: jdbc:postgresql://ep-spring-field-a2anicp8-pooler.eu-central-1.aws.neon.tech/neondb
+    password: ${DB_PASSWORD}
+    username: ${DB_USERNAME}
+    url: ${DB_URL}
   jpa:
     properties.hibernate:
       show_sql: true
@@ -20,7 +22,10 @@ spring:
       client:
         registration:
           google:
-            client-id: 93939362266-iuoldti0p8bgqtdbpmp5kfhpv21r2507.apps.googleusercontent.com
-            client-secret: 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
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-id: ${GOOGLE_CLI_ID}
+            client-secret: ${GOOGLE_CLI_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
             scope: openid,email,profile
+aws:
+  access: ${AWS_ACCESS}
+  secret: ${AWS_SECRET}
