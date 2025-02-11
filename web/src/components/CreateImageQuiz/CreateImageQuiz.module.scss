@@ -1,3 +1,27 @@
 .createImageQuiz{
 
+
+  &_highlightBox{
+    border-radius: 10px;
+    background-color: rgba(255, 255, 0, 0.35);
+  }
+  &_leftSizeOpt{
+    cursor: grab;
+    background-color: blue;
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+  }
+  &_rightSizeOpt{
+
+    position: absolute;
+    cursor: grab;
+    background-color: red;
+
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+  }
 }
