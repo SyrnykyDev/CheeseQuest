@@ -1,0 +1,32 @@
+.editQuiz{
+  display: grid;
+  grid-template-columns:25% 75% ;
+  height: 100%;
+  width: 100%;
+  background-color: #fdffdf;
+  &_questions{
+    min-height: 70vh;
+    box-shadow: 3px 0px 3px 2px rgba(166, 166, 166, 0.45);
+    //overflow-y: scroll;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    background:#ffffff;
+    //height: 100%;
+    flex-direction: column;
+    &_container{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  &_params{
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+    padding: 25px;
+
+  }
+}
