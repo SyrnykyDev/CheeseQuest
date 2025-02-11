@@ -17,7 +17,7 @@ public class MediaService {
     private final S3Client s3Client;
 
     @SneakyThrows
-    public String upload(MultipartFile multipartFile) {
+    public String uploadProfileImage(MultipartFile multipartFile) {
         String filename = multipartFile.getOriginalFilename();
         String url = "images/" + UUID.randomUUID().toString() + filename;
         PutObjectRequest request = PutObjectRequest.builder()
@@ -26,6 +26,17 @@ public class MediaService {
                 .build();
         s3Client.putObject(request, RequestBody.fromBytes(multipartFile.getBytes()));
         return s3Client.utilities().getUrl(e -> e.bucket("userprofilepicturesbucket").key(url)).toString();
+    }
+    @SneakyThrows
+    public String uploadTaskMedia(MultipartFile multipartFile) {
+        String filename = multipartFile.getOriginalFilename();
+        String url = "media/" + UUID.randomUUID().toString() + filename;
+        PutObjectRequest request = PutObjectRequest.builder()
+                .key(url)
+                .bucket("tasksmediabucket")
+                .build();
+        s3Client.putObject(request, RequestBody.fromBytes(multipartFile.getBytes()));
+        return s3Client.utilities().getUrl(e -> e.bucket("tasksmediabucket").key(url)).toString();
     }
 
 }

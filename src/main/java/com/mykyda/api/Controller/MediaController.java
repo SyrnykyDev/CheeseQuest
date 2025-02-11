@@ -14,8 +14,12 @@ public class MediaController {
 
     private final MediaService mediaService;
 
-    @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadImage(@RequestPart MultipartFile image) {
-        return mediaService.upload(image);
+    @PostMapping(value = "/profile/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadProfileImage(@RequestPart MultipartFile image) {
+        return mediaService.uploadProfileImage(image);
+    }
+    @PostMapping(value = "/taskMedia/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadMedia(@RequestPart MultipartFile media) {
+        return mediaService.uploadTaskMedia(media);
     }
 }

@@ -76,9 +76,15 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<?> findById(Long id) {
-        var optUser = userRepository.findById(id);
-        return optUser.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+        var user = userRepository.findById(id).get();
+        if (user == null) {
+            return new ResponseEntity<>(Collections.singletonMap("message", "such user don`t exist"), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(new UserDemoDto(user.getAvatar()
+                    , user.getUsername()
+                    , user.getEmail()
+                    , user.getRole()), HttpStatus.OK);
+        }}
 
     public ResponseEntity<?> create(Map<String, Object> claims) {
         var user = User.builder()
@@ -88,11 +94,12 @@ public class UserService implements UserDetailsService {
                 .username(claims.get("name").toString())
                 .password(passwordEncoder.encode(String.valueOf(System.currentTimeMillis() * claims.hashCode())))
                 .build();
-        return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap("message","user successfully created"), HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> save(ProfileEditDto peDto, Principal principal) {
         var user = userRepository.findByEmail(principal.getName()).get();
+        var avatar = peDto.getAvatar();
         user.setAvatar(peDto.getAvatar());
         user.setUsername(peDto.getUsername());
         userRepository.save(user);

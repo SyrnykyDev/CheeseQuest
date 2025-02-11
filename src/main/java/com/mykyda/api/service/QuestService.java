@@ -17,8 +17,13 @@ public class QuestService {
 
     private final QuestRepository questRepository;
 
-    public Quest findById(Long id) {
-        return questRepository.findById(id).orElse(null);
+    public ResponseEntity<?> findById(Long id) {
+        var quest = questRepository.findById(id).get();
+        if (quest == null){
+            return new ResponseEntity<>(quest,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Collections.singletonMap("message","no quest with such id"),HttpStatus.NOT_FOUND);
+        }
     }
 
     public Quest create(QuestCreationDto qcDto) {

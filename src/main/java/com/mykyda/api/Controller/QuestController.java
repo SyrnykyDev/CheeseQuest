@@ -21,7 +21,7 @@ public class QuestController {
     private final TaskService taskService;
 
     @GetMapping("/{id}")
-    public Quest getQuest(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
         return questService.findById(id);
     }
 
