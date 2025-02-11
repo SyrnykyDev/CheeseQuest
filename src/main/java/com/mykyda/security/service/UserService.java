@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -92,4 +93,13 @@ public class UserService implements UserDetailsService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
+
+    public ResponseEntity<?> findByPrincipal(Principal principal) {
+        var user = userRepository.findByEmail(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>(Collections.singletonMap("message","such user don`t exist"),HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(user,HttpStatus.OK);
+        }
+        }
 }

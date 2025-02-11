@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: npg_e4PVUdKYwDZ0
+    username: neondb_owner
+    url: jdbc:postgresql://ep-spring-field-a2anicp8-pooler.eu-central-1.aws.neon.tech/neondb
+  jpa:
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+      hbm2ddl.auto: update
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  flyway:
+    baseline-on-migrate: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 93939362266-iuoldti0p8bgqtdbpmp5kfhpv21r2507.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope: openid,email,profile
