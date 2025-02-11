@@ -13,6 +13,7 @@ $height: 70px;
   width: 100%;
   position: fixed;
   display: flex;
+  z-index: 10;
 
   &_rightPart{
     margin: auto 20px auto auto;

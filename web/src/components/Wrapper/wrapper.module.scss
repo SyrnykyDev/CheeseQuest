@@ -1,6 +1,10 @@
 .wrapper{
+
   &_content{
-    background-color: #fdffdf;
+    //background-color: #fdffdf;
+    background-image: url("../../../public/image_3_1.png") ;
+    background-repeat: repeat;
+    background-size: 35%;
     display: flex;
     min-height: 70vh;
   }

@@ -8,7 +8,7 @@ import styles from "./Input.module.scss";
 
 interface InputProps extends React.InputHTMLAttributes<any> {
   title?: string;
-  inputType?: "sans";
+  inputType?: "sans" | "round";
   value?: string | number;
   required?: boolean;
 }
@@ -17,18 +17,23 @@ interface InputProps extends React.InputHTMLAttributes<any> {
  * Extended default input
  **/
 const Input = (props: InputProps) => {
-  const { onChange, required } = props;
+  const { onChange, required, inputType = "sans", ...otherProps } = props;
 
   const [change, setChange] = useState(true);
-  const [state, setState] = useState("");
+  // const [state, setState] = useState("");
+
+  // useEffect(() => {
+  //   props.value !== undefined && setState(props.value);
+  // }, [props.value]);
 
   const onMiddleChange = (event: React.FormEvent<HTMLInputElement>): void => {
     console.log(event?.target?.value);
-    if (onChange) {
-      onChange(event);
-    } else {
-      setState(event?.target?.value);
-    }
+    // if () {
+    if (onChange) onChange(event);
+    // setState(event?.target?.value);
+    // } else {
+    //   setState(event?.target?.value);
+    // }
   };
 
   useEffect(() => {
@@ -39,19 +44,19 @@ const Input = (props: InputProps) => {
       }, 150); // Adjust the timeout duration equal to your animation time, in your case is 1100
     };
     changeStage();
-  }, [state]);
+  }, [props.value]);
 
   return (
-    <div className={`${styles.input} ${styles.input_sans}`}>
+    <div className={`${styles.input} ${styles[`input_${inputType}`]}`}>
       {props?.title && <span>{props.title}</span>}
 
       <input
         className={`${styles.input_input} ${change ? styles.input_anim : ""}`}
-        {...props}
+        {...otherProps}
         placeholder={
-          props?.placeholder && `${props?.placeholder} ${required && "*"}`
+          props?.placeholder && `${props?.placeholder} ${required ? "*" : ""}`
         }
-        value={state}
+        value={props.value || ""}
         onChange={onMiddleChange}
       />
     </div>
