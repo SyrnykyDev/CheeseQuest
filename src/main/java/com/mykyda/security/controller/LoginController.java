@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.security.Principal;
+import java.util.Collections;
 import java.util.Date;
 
 @Controller
@@ -37,12 +39,12 @@ public class LoginController {
     private final AuthenticationManager authManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         var user = userService.findByEmail(loginDto.getEmail());
-        if (user != null){
+        if (user != null) {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-            setCookie(user,response);
-        }else {
+            setCookie(user, response);
+        } else {
             throw new RuntimeException("no user found");
         }
         return ResponseEntity.ok(user);
@@ -64,22 +66,28 @@ public class LoginController {
         return cookie;
     }
 
-    @PostMapping()
-    public ResponseEntity<?> checkToken(HttpServletRequest request){
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String email = jwtService.extractUsername(token);
-            if (email != null && jwtService.validateToken(token)) {
-                return ResponseEntity.ok("Token is valid");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-            }
+//    @PostMapping()
+//    public ResponseEntity<?> checkToken(HttpServletRequest request){
+//        String authHeader = request.getHeader("Authorization");
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            String token = authHeader.substring(7);
+//            String email = jwtService.extractUsername(token);
+//            if (email != null && jwtService.validateToken(token)) {
+//                return ResponseEntity.ok("Token is valid");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header missing or incorrect");
+//        }
+//    }
+
+    @GetMapping()
+    public ResponseEntity<?> getCurrentAccount(Principal principal) {
+        if (principal.getName() != null) {
+            return ResponseEntity.ok(Collections.singletonMap("validated",true));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header missing or incorrect");
+            return ResponseEntity.ok(Collections.singletonMap("validated",false));
         }
     }
-
-
-
 }
