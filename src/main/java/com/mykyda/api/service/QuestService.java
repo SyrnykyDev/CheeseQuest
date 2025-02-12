@@ -5,6 +5,7 @@ import com.mykyda.api.database.repository.QuestRepository;
 import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.api.dto.QuestDemoDto;
 import com.mykyda.api.dto.QuestEditDto;
+import com.mykyda.api.dto.UserDemoDto;
 import com.mykyda.security.database.entity.User;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class QuestService {
         if (quest == null) {
             return new ResponseEntity<>(Collections.singletonMap("message", "no quest with such id"), HttpStatus.NOT_FOUND);
         } else {
-            var res = new QuestDemoDto(quest.getId(), quest.getName(), quest.getDescription(), quest.getRating(), (User) userService.findById(quest.getAuthorId()).getBody());
+            var res = new QuestDemoDto(quest.getId(), quest.getName(), quest.getDescription(), quest.getRating(), (UserDemoDto) userService.findById(quest.getAuthorId()).getBody());
             return new ResponseEntity<>(res, HttpStatus.OK);
         }
     }

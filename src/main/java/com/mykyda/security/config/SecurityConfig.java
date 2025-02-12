@@ -70,7 +70,8 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()))
                 .oauth2Login(oa -> oa
                         .permitAll()
-                        .defaultSuccessUrl("/api/auth/oauth2/success"));
+                        .defaultSuccessUrl("/api/auth/oauth2/success")
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
         return http.build();
     }
 

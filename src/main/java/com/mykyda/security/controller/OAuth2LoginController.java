@@ -26,6 +26,10 @@ public class OAuth2LoginController {
     public ResponseEntity<?> onOAuth2LoginSuccess(HttpServletResponse response) {
         OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String email = authenticationToken.getPrincipal().getName();
+        System.out.println(authenticationToken.getName());
+        System.out.println(authenticationToken.getPrincipal().getName());
+        System.out.println(authenticationToken.isAuthenticated());
+        System.out.println(authenticationToken.getCredentials());
         String jwt = jwtService.generateToken(email);
         Cookie cookie = new Cookie("accessToken", jwt);
         cookie.setHttpOnly(true);
