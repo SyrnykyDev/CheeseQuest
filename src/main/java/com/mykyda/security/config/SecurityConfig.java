@@ -11,7 +11,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -23,7 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -62,15 +60,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(login -> login
-                        .loginPage("/api/auth/login")
-                        .defaultSuccessUrl("/api/user")
-                        .permitAll())
+//                .formLogin(login -> login
+//                        .loginPage("/api/auth/login")
+//                        .permitAll())
+                .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()))
                 .oauth2Login(login -> login
-                        .defaultSuccessUrl("/api/user")
                         .permitAll()
                         .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
         return http.build();

@@ -12,8 +12,8 @@ import java.sql.Date;
 
 @Component
 public class JwtService {
-    @Value("${JWT_SECRET}")
-    private static String SECRET_KEY;
+    @Value("${spring.security.jwt.secret}")
+    private String SECRET_KEY;
 
     public String generateToken(User userDetails) {
         return Jwts.builder()

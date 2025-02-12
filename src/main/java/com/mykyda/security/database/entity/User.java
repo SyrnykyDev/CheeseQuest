@@ -2,6 +2,11 @@ package com.mykyda.security.database.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Builder
@@ -12,7 +17,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +33,9 @@ public class User {
     Role role;
 
     String avatar;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(this.role);
+    }
 }
