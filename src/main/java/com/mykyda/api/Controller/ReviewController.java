@@ -1,6 +1,7 @@
 package com.mykyda.api.controller;
 
 import com.mykyda.api.database.entity.Review;
+import com.mykyda.api.dto.ReviewDemoDto;
 import com.mykyda.api.dto.ReviewDto;
 import com.mykyda.api.service.ReviewService;
 import com.mykyda.security.service.UserService;
@@ -27,7 +28,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Review>> getReviewsByQuestId(@PathVariable Long id) {
+    public ResponseEntity<List<ReviewDemoDto>> getReviewsByQuestId(@PathVariable Long id) {
         return ResponseEntity.ok(reviewService.getReviewsByQuestId(id));
     }
 }

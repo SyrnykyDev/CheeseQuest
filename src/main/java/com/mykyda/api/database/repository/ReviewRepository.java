@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Optional<List<Review>> findAllByQuestId(Long questId);
+    List<Review> findAllByQuestId(Long questId);
 
 }
