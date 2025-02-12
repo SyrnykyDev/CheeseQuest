@@ -25,8 +25,8 @@ public class RegistrationController {
         User user = userService.register(userCreateDto.getUsername(), userCreateDto.getEmail(), userCreateDto.getPassword());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping()
-    public String getRegistration(){
-        return "registration";
-    }
+//    @GetMapping()
+//    public String getRegistration(){
+//        return "registration";
+//    }
 }

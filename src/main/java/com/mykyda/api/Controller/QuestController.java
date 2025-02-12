@@ -1,6 +1,7 @@
 package com.mykyda.api.controller;
 
 import com.mykyda.api.database.entity.Author;
+import com.mykyda.api.dto.TaskAnswerDto;
 import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.QuestService;
 import com.mykyda.api.service.ReviewService;
@@ -52,15 +53,21 @@ public class QuestController {
     public ResponseEntity<?> start(@PathVariable(name = "id") Long id) {
         var tasks = taskService.findAllByQuest(id);
         if (!tasks.isEmpty()) {
-            var indexes = new ArrayList<Long>();
-            for (var i : tasks) {
-                indexes.add(i.getId());
-            }
-            return new ResponseEntity<>(indexes, HttpStatus.OK);
+            return new ResponseEntity<>(tasks, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
         }
     }
+
+//    @PostMapping("/{id}/end")
+//    public ResponseEntity<?> end(@RequestBody List<TaskAnswerDto> answers) {
+//        var tasks = taskService.findAllByQuest(id);
+//        if (!tasks.isEmpty()) {
+//            return new ResponseEntity<>(tasks, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 //    @PostMapping("/{id}/start")
 //    public ResponseEntity<?> start(@PathVariable(name = "id") Long id) {
@@ -93,11 +100,11 @@ public class QuestController {
 //    }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuest(@RequestParam String name, @RequestParam String desc, @RequestParam MultipartFile media, @RequestParam(required = false) Integer timeLimit, Principal principal) {
+    public ResponseEntity<?> createQuest(@RequestParam String name, @RequestParam String description, @RequestParam(required = false) MultipartFile media, @RequestParam(required = false) Integer timeLimit, Principal principal) {
         var user = userService.findByEmail(principal.getName());
         var author = (Author) authorService.checkAndCreate(user.getId()).getBody();
         authorService.incrementProjectAmount(author);
-        var savedQuest = questService.create(name,desc,media,timeLimit,author.getIdUser());
+        var savedQuest = questService.create(name,description,media,timeLimit,author.getIdUser());
         return new ResponseEntity<>(savedQuest.getId(),HttpStatus.OK);
     }
 

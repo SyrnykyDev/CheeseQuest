@@ -41,7 +41,13 @@ public class QuestService {
     }
 
     public Quest create(String name, String desc, MultipartFile media, Integer timeLimit, Long authorId) {
-        var savedMedia = mediaService.uploadQuestMedia(media);
+        if (timeLimit == null){
+            timeLimit = 0;
+        }
+        String savedMedia = "123";
+        if (media!= null){
+            savedMedia = mediaService.uploadQuestMedia(media);
+        }
         var quest = Quest.builder()
                 .authorId(authorId)
                 .description(desc)
