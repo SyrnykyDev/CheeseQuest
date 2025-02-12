@@ -1,7 +1,7 @@
 package com.mykyda.security.service;
 
-import com.mykyda.api.dto.ProfileEditDto;
 import com.mykyda.api.dto.UserDemoDto;
+import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.MediaService;
 import com.mykyda.security.database.entity.Role;
 import com.mykyda.security.database.entity.User;
@@ -9,19 +9,16 @@ import com.mykyda.security.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +30,9 @@ public class UserService implements UserDetailsService {
 
     private final MediaService mediaService;
 
+    private final AuthorsService authorsService;
+
     final String defaultAvatar = "https://userprofilepicturesbucket.s3.eu-north-1.amazonaws.com/images/00cad4aa-db93-4920-aab6-3bc341b0fb87user.png";
-
-    public User update(User user) {
-        return user;
-    }
-
 
     public User register(String username, String email, String password) {
         if (userRepository.findByEmail(email).isEmpty()) {
@@ -108,17 +102,27 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> save(MultipartFile file, String username, Principal principal) {
         var user = userRepository.findByEmail(principal.getName()).get();
-        if (file!=null){
-            if (username!=null){
+        var author = authorsService.findById(user.getId());
+        if (file != null) {
+            if (username != null) {
                 user.setUsername(username);
+                if (author!=null){
+                    author.setUsername(username);
+                    authorsService.save(author);
+                }
             }
             user.setAvatar(mediaService.uploadProfileImage(file));
             userRepository.save(user);
         } else {
-            if (username!=null){
+            if (username != null) {
                 user.setUsername(username);
                 userRepository.save(user);
+                if (author!=null){
+                    author.setUsername(username);
+                    authorsService.save(author);
+                }
             }
+
         }
         return new ResponseEntity<>(Collections.singletonMap("message", "user successfully updated"), HttpStatus.OK);
     }

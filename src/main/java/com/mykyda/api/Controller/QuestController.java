@@ -65,21 +65,21 @@ public class QuestController {
 //        }
 //    }
 
-    @GetMapping("/edit/{id}")
-    public Map<String, Object> getQuestToEdit(@PathVariable(name = "id") Long id) {
-        var quest = questService.findById(id);
-        var tasks = taskService.findAllByQuest(id);
-        return Map.of(
-                "tasks", tasks,
-                "quest", quest);
-    }
+//    @GetMapping("/edit/{id}")
+//    public Map<String, Object> getQuestToEdit(@PathVariable(name = "id") Long id) {
+//        var quest = questService.findById(id);
+//        var tasks = taskService.findAllByQuest(id);
+//        return Map.of(
+//                "tasks", tasks,
+//                "quest", quest);
+//    }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<?> postQuestToEdit(@RequestBody QuestEditDto qeDto) {
-        questService.update(qeDto);
-        var tasks = qeDto.getTasks();
-        return taskService.saveAllTasks(tasks);
-    }
+//    @PostMapping("/edit/{id}")
+//    public ResponseEntity<?> postQuestToEdit(@RequestBody QuestEditDto qeDto) {
+//        questService.update(qeDto);
+//        var tasks = qeDto.getTasks();
+//        return taskService.saveAllTasks(tasks);
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuest(@RequestBody QuestCreationDto qcDto, Principal principal) {
@@ -89,8 +89,7 @@ public class QuestController {
         var savedQuest = questService.create(qcDto,principal,author.getIdUser());
         var tasks = qcDto.getTasks();
         if (!tasks.isEmpty()) {
-            tasks.forEach(task -> task.setQuestId(savedQuest.getId()));
-            taskService.saveAllTasks(tasks);
+            taskService.saveAllTasks(tasks,author.getIdUser(),savedQuest.getId());
         }
         return new ResponseEntity<>(Collections.singletonMap("message","quest created"),HttpStatus.OK);
     }

@@ -57,23 +57,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/profile/**").permitAll()  // Додано публічний шлях
-                        .requestMatchers("/api/quests/all", "api/profile/{id}/quests").permitAll()
-                        .anyRequest().authenticated()  // Всі інші шляхи потребують аутентифікації
+                        .requestMatchers("/api/auth/**", "/login/oauth2/code/google").permitAll()
+                        .requestMatchers("/api/profile/**", "/api/quest/{id}", "api/authors").permitAll()
+                        .requestMatchers("/api/quests/all").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 //                .formLogin(login -> login
 //                        .loginPage("/api/auth/login")
 //                        .permitAll())
-                .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()));
-//                .oauth2Login(login -> login
-//                        .permitAll()
-//                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
-//                .oauth2Login(oa -> oa
-//                    .loginPage("/api/auth/login")
-//                    .defaultSuccessUrl("/api/auth/oauth2/success"));
+                .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()))
+                .oauth2Login(oa -> oa
+                        .permitAll()
+                        .defaultSuccessUrl("/api/auth/oauth2/success"));
         return http.build();
     }
 

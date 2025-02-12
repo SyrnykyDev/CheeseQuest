@@ -3,7 +3,9 @@ package com.mykyda.api.service;
 import com.mykyda.api.database.entity.Quest;
 import com.mykyda.api.database.repository.QuestRepository;
 import com.mykyda.api.dto.QuestCreationDto;
+import com.mykyda.api.dto.QuestDemoDto;
 import com.mykyda.api.dto.QuestEditDto;
+import com.mykyda.security.database.entity.User;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,18 +22,20 @@ public class QuestService {
 
     private final QuestRepository questRepository;
 
+    private final UserService userService;
+
     public ResponseEntity<?> findById(Long id) {
         var quest = questRepository.findById(id).get();
-        if (quest == null){
-            return new ResponseEntity<>(Collections.singletonMap("message","no quest with such id"),HttpStatus.NOT_FOUND);
+        if (quest == null) {
+            return new ResponseEntity<>(Collections.singletonMap("message", "no quest with such id"), HttpStatus.NOT_FOUND);
         } else {
-
-            return new ResponseEntity<>(quest,HttpStatus.OK);
+            var res = new QuestDemoDto(quest.getId(), quest.getName(), quest.getDescription(), quest.getRating(), (User) userService.findById(quest.getAuthorId()).getBody());
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
     }
 
     //ToDO::timeLimit 0
-    public Quest create(QuestCreationDto qcDto, Principal principal,Long authorId) {
+    public Quest create(QuestCreationDto qcDto, Principal principal, Long authorId) {
         var timeLimit = 0;
         var quest = Quest.builder()
                 .authorId(authorId)
@@ -54,21 +59,21 @@ public class QuestService {
         new ResponseEntity<>(Collections.singletonMap("message", "successful update"), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<?> findAll() {
         var quests = questRepository.findAll();
-        if (!quests.isEmpty()){
-            return new ResponseEntity<>(quests,HttpStatus.OK);
+        if (!quests.isEmpty()) {
+            return new ResponseEntity<>(quests, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Collections.singletonMap("message","no existing quests yet"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Collections.singletonMap("message", "no existing quests yet"), HttpStatus.NOT_FOUND);
         }
     }
 
-    public ResponseEntity<?> findAllByAuthorId(Long id){
+    public ResponseEntity<?> findAllByAuthorId(Long id) {
         var quests = questRepository.findAllByAuthorId(id);
-        if (!quests.isEmpty()){
-            return new ResponseEntity<>(quests,HttpStatus.OK);
+        if (!quests.isEmpty()) {
+            return new ResponseEntity<>(quests, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Collections.singletonMap("message","no quests found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Collections.singletonMap("message", "no quests found"), HttpStatus.NOT_FOUND);
         }
     }
 }

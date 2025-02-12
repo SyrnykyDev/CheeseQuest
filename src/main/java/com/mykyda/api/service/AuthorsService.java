@@ -15,7 +15,6 @@ public class AuthorsService {
 
     private final AuthorRepository authorRepository;
 
-
     public ResponseEntity<?> findAllSortedByScore() {
         var authors = authorRepository.findAllByOrderBySumScoreDesc();
         if (authors.isEmpty()) {
@@ -41,5 +40,13 @@ public class AuthorsService {
 
     public void incrementProjectAmount(Author author){
         author.setSumQuest(author.getSumQuest()+1);
+    }
+
+    public Author findById(Long id){
+        return authorRepository.findById(id).orElse(null);
+    }
+
+    public Author save(Author author){
+        return authorRepository.save(author);
     }
 }
