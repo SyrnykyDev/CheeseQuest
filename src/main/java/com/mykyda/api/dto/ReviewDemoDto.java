@@ -15,4 +15,6 @@ public class ReviewDemoDto {
     String username;
 
     String message;
+
+    String avatar;
 }

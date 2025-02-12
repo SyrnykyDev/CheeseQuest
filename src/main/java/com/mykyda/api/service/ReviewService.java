@@ -35,7 +35,7 @@ public class ReviewService {
         List<ReviewDemoDto> reviewDtos = new ArrayList<>();
         if (!reviews.isEmpty()) {
             for (var review : reviews) {
-                var rd = new ReviewDemoDto(review.getUser().getUsername(), review.getText());
+                var rd = new ReviewDemoDto(review.getUser().getUsername(), review.getText(),review.getUser().getAvatar());
                 reviewDtos.add(rd);
             }
             return reviewDtos;
