@@ -2,6 +2,7 @@ package com.mykyda.api.service;
 
 import com.mykyda.api.database.entity.Task;
 import com.mykyda.api.database.repository.TaskRepository;
+import com.mykyda.api.dto.TaskAnswerDto;
 import com.mykyda.api.dto.TaskCreationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,5 +55,18 @@ public class TaskService {
                 .build();
         return taskRepository.save(task);
     }
+
+//    public Integer result(List<Task> tasks, List<TaskAnswerDto> answers) {
+//        var result = 0;
+//        for (int i = 0; i < tasks.size(); i++) {
+//            var task = tasks.get(i);
+//            if (task.getType()=="quiz"){
+//
+//            } else if (task.getType()=="open"){
+//
+//            }
+//            if (tasks.get(i).getAnswer());
+//        }
+//    }
 
 }

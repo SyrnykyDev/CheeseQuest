@@ -33,7 +33,7 @@ public class QuestController {
     private final ReviewService reviewService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id,Principal principal) {
+    public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id, Principal principal) {
         var quest = questService.findObjectById(id);
         var reviews = reviewService.getReviewsByQuestId(id);
         var user = userService.findByEmail(principal.getName());
@@ -45,11 +45,11 @@ public class QuestController {
             }
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("quest",quest);
-        response.put("reviews",reviews);
-        response.put("author",author);
-        response.put("isAuthor",isAuthor);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        response.put("quest", quest);
+        response.put("reviews", reviews);
+        response.put("author", author);
+        response.put("isAuthor", isAuthor);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/start")
@@ -58,18 +58,14 @@ public class QuestController {
         if (!tasks.isEmpty()) {
             return new ResponseEntity<>(tasks, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Collections.singletonMap("message", "can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
         }
     }
 
 //    @PostMapping("/{id}/end")
-//    public ResponseEntity<?> end(@RequestBody List<TaskAnswerDto> answers) {
+//    public ResponseEntity<?> end(@PathVariable Long id, @RequestBody List<TaskAnswerDto> answers) {
 //        var tasks = taskService.findAllByQuest(id);
-//        if (!tasks.isEmpty()) {
-//            return new ResponseEntity<>(tasks, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
-//        }
+//        return new ResponseEntity<>(taskService.result(tasks, answers), HttpStatus.OK);
 //    }
 
 //    @PostMapping("/{id}/start")
@@ -107,8 +103,8 @@ public class QuestController {
         var user = userService.findByEmail(principal.getName());
         var author = (Author) authorService.checkAndCreate(user.getId()).getBody();
         authorService.incrementProjectAmount(author);
-        var savedQuest = questService.create(name,description,media,timeLimit,author.getIdUser());
-        return new ResponseEntity<>(savedQuest.getId(),HttpStatus.OK);
+        var savedQuest = questService.create(name, description, media, timeLimit, author.getIdUser());
+        return new ResponseEntity<>(savedQuest.getId(), HttpStatus.OK);
     }
 
 
