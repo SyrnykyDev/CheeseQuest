@@ -5,6 +5,7 @@ import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> postProfileEdit(@RequestBody ProfileEditDto peDto, Principal principal) {
-        return userService.save(peDto, principal);
+    public ResponseEntity<?> postProfileEdit(@RequestPart MultipartFile file, @RequestPart String username, Principal principal) {
+        return userService.save(file, username, principal);
     }
 }

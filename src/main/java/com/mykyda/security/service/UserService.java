@@ -2,6 +2,7 @@ package com.mykyda.security.service;
 
 import com.mykyda.api.dto.ProfileEditDto;
 import com.mykyda.api.dto.UserDemoDto;
+import com.mykyda.api.service.MediaService;
 import com.mykyda.security.database.entity.Role;
 import com.mykyda.security.database.entity.User;
 import com.mykyda.security.database.repository.UserRepository;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -25,6 +28,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final MediaService mediaService;
 
     final String defaultAvatar = "https://userprofilepicturesbucket.s3.eu-north-1.amazonaws.com/images/00cad4aa-db93-4920-aab6-3bc341b0fb87user.png";
 
@@ -99,11 +104,10 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(Collections.singletonMap("message", "user successfully created"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> save(ProfileEditDto peDto, Principal principal) {
+    public ResponseEntity<?> save(MultipartFile file, String username, Principal principal) {
         var user = userRepository.findByEmail(principal.getName()).get();
-        var avatar = peDto.getAvatar();
-        user.setAvatar(peDto.getAvatar());
-        user.setUsername(peDto.getUsername());
+        user.setAvatar(mediaService.uploadProfileImage(file));
+        user.setUsername(username);
         userRepository.save(user);
         return new ResponseEntity<>(Collections.singletonMap("message", "user successfully updated"), HttpStatus.OK);
     }
