@@ -39,4 +39,16 @@ public class MediaService {
         return s3Client.utilities().getUrl(e -> e.bucket("tasksmediabucket").key(url)).toString();
     }
 
+    @SneakyThrows
+    public String uploadQuestMedia(MultipartFile multipartFile) {
+        String filename = multipartFile.getOriginalFilename();
+        String url = "quest/media/" + UUID.randomUUID().toString() + filename;
+        PutObjectRequest request = PutObjectRequest.builder()
+                .key(url)
+                .bucket("tasksmediabucket")
+                .build();
+        s3Client.putObject(request, RequestBody.fromBytes(multipartFile.getBytes()));
+        return s3Client.utilities().getUrl(e -> e.bucket("tasksmediabucket").key(url)).toString();
+    }
+
 }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 
@@ -22,24 +24,26 @@ public class QuestService {
 
     private final UserService userService;
 
-    public ResponseEntity<?> findById(Long id) {
-        var quest = questRepository.findById(id).get();
-        if (quest == null) {
-            return new ResponseEntity<>(Collections.singletonMap("message", "no quest with such id"), HttpStatus.NOT_FOUND);
-        } else {
-            var res = new QuestDemoDto(quest.getId(), quest.getName(), quest.getDescription(), quest.getRating(), (UserDemoDto) userService.findById(quest.getAuthorId()).getBody());
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        }
+    private final MediaService mediaService;
+
+    public QuestDemoDto findById(Long id) {
+        var quest = questRepository.findById(id).orElse(null);
+//        if (quest == null) {
+//            return new ResponseEntity<>(Collections.singletonMap("message", "no quest with such id"), HttpStatus.NOT_FOUND);
+//        } else {
+        return new QuestDemoDto(quest.getId(), quest.getName(), quest.getDescription(), quest.getRating(), (UserDemoDto) userService.findById(quest.getAuthorId()).getBody());
+//            return new ResponseEntity<>(res, HttpStatus.OK);
+//        }
     }
 
-    //ToDO::timeLimit 0
-    public Quest create(QuestCreationDto qcDto, Long authorId) {
-        var timeLimit = 0;
+    public Quest create(String name, String desc, MultipartFile media, Integer timeLimit, Long authorId) {
+        var savedMedia = mediaService.uploadQuestMedia(media);
         var quest = Quest.builder()
                 .authorId(authorId)
-                .description(qcDto.getDescription())
-                .name(qcDto.getName())
-                .rating(qcDto.getRating())
+                .description(desc)
+                .name(name)
+                .media(savedMedia)
+                .rating(0)
                 .timeLimit(timeLimit)
                 .build();
         return questRepository.save(quest);

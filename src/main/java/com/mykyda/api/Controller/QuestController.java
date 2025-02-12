@@ -3,6 +3,7 @@ package com.mykyda.api.controller;
 import com.mykyda.api.database.entity.Author;
 import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.QuestService;
+import com.mykyda.api.service.ReviewService;
 import com.mykyda.api.service.TaskService;
 import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.security.service.UserService;
@@ -10,10 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quest")
@@ -28,9 +32,16 @@ public class QuestController {
 
     private final UserService userService;
 
+    private final ReviewService reviewService;
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
-        return questService.findById(id);
+        var quest = questService.findById(id);
+        var reviews = reviewService.getReviewsByQuestId(id);
+        Map<String, Object> response = new HashMap<>();
+        response.put("quest",quest);
+        response.put("reviews",reviews);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @GetMapping("/{id}/start")
@@ -78,15 +89,11 @@ public class QuestController {
 //    }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuest(@RequestBody QuestCreationDto qcDto, Principal principal) {
+    public ResponseEntity<?> createQuest(@RequestParam String name, @RequestParam String desc, @RequestParam MultipartFile media, @RequestParam(required = false) Integer timeLimit, Principal principal) {
         var user = userService.findByEmail(principal.getName());
         var author = (Author) authorService.checkAndCreate(user.getId()).getBody();
         authorService.incrementProjectAmount(author);
-        var savedQuest = questService.create(qcDto, author.getIdUser());
-//        var tasks = qcDto.getTasks();
-//        if (!tasks.isEmpty()) {
-//            taskService.saveAllTasks(tasks,author.getIdUser(),savedQuest.getId());
-//        }
+        var savedQuest = questService.create(name,desc,media,timeLimit,author.getIdUser());
         return new ResponseEntity<>(savedQuest.getId(),HttpStatus.OK);
     }
 
