@@ -27,4 +27,5 @@ public class UserController {
             @RequestParam(value = "username", required = false) String username, Principal principal) {
         return userService.save(file, username, principal);
     }
+
 }

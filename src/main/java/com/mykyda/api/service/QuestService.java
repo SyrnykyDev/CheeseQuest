@@ -64,4 +64,13 @@ public class QuestService {
             return new ResponseEntity<>(Collections.singletonMap("message","no existing quests yet"),HttpStatus.NOT_FOUND);
         }
     }
+
+    public ResponseEntity<?> findAllByAuthorId(Long id){
+        var quests = questRepository.findAllByAuthorId(id);
+        if (!quests.isEmpty()){
+            return new ResponseEntity<>(quests,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Collections.singletonMap("message","no quests found"),HttpStatus.NOT_FOUND);
+        }
+    }
 }

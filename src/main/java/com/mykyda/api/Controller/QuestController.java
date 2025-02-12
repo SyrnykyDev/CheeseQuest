@@ -88,4 +88,6 @@ public class QuestController {
         }
         return new ResponseEntity<>(Collections.singletonMap("message","quest created"),HttpStatus.OK);
     }
+
+
 }
