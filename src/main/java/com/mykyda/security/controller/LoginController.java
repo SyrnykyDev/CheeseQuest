@@ -6,9 +6,13 @@ import com.mykyda.security.dto.LoginDto;
 import com.mykyda.security.dto.UserCreateDto;
 import com.mykyda.security.service.JwtService;
 import com.mykyda.security.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Date;
+
 @Controller
-@RequestMapping("/api/auth/login")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class LoginController {
 
@@ -30,8 +36,8 @@ public class LoginController {
 
     private final AuthenticationManager authManager;
 
-    @PostMapping()
-    public ResponseEntity<?> defaultLogin(@RequestBody LoginDto loginDto, HttpServletResponse response){
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
         var user = userService.findByEmail(loginDto.getEmail());
         if (user != null){
             authManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -40,10 +46,6 @@ public class LoginController {
             throw new RuntimeException("no user found");
         }
         return ResponseEntity.ok(user);
-    }
-    @GetMapping()
-    public String getLogin(){
-        return "login";
     }
 
     private void setCookie(User user, HttpServletResponse response) {
@@ -61,4 +63,23 @@ public class LoginController {
         cookie.setSecure(false);
         return cookie;
     }
+
+    @PostMapping()
+    public ResponseEntity<?> checkToken(HttpServletRequest request){
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String email = jwtService.extractUsername(token);
+            if (email != null && jwtService.validateToken(token)) {
+                return ResponseEntity.ok("Token is valid");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header missing or incorrect");
+        }
+    }
+
+
+
 }

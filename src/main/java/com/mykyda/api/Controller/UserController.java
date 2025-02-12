@@ -20,11 +20,6 @@ public class UserController {
         return userService.findByPrincipal(principal);
     }
 
-    @GetMapping("/edit")
-    public ResponseEntity<?> getProfileEdit(Principal principal) {
-        return getProfile(principal);
-    }
-
     @PostMapping("/edit")
     public ResponseEntity<?> postProfileEdit(@RequestBody ProfileEditDto peDto, Principal principal) {
         return userService.save(peDto, principal);
