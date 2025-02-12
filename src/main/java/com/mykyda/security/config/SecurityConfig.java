@@ -65,10 +65,10 @@ public class SecurityConfig {
 //                .formLogin(login -> login
 //                        .loginPage("/api/auth/login")
 //                        .permitAll())
-                .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()))
-                .oauth2Login(login -> login
-                        .permitAll()
-                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
+                .exceptionHandling(e -> e.authenticationEntryPoint(new AuthenticationEntryPoint()));
+//                .oauth2Login(login -> login
+//                        .permitAll()
+//                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
         return http.build();
     }
 

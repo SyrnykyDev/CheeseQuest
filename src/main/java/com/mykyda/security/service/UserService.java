@@ -9,6 +9,7 @@ import com.mykyda.security.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -106,9 +108,18 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> save(MultipartFile file, String username, Principal principal) {
         var user = userRepository.findByEmail(principal.getName()).get();
-        user.setAvatar(mediaService.uploadProfileImage(file));
-        user.setUsername(username);
-        userRepository.save(user);
+        if (file!=null){
+            if (username!=null){
+                user.setUsername(username);
+            }
+            user.setAvatar(mediaService.uploadProfileImage(file));
+            userRepository.save(user);
+        } else {
+            if (username!=null){
+                user.setUsername(username);
+                userRepository.save(user);
+            }
+        }
         return new ResponseEntity<>(Collections.singletonMap("message", "user successfully updated"), HttpStatus.OK);
     }
 

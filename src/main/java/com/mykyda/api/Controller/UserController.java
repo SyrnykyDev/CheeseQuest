@@ -21,8 +21,9 @@ public class UserController {
         return userService.findByPrincipal(principal);
     }
 
+    //ToDo:type validation
     @PostMapping("/edit")
-    public ResponseEntity<?> postProfileEdit(@RequestPart MultipartFile file, @RequestPart String username, Principal principal) {
+    public ResponseEntity<?> postProfileEdit(@RequestPart(required = false) MultipartFile file, @RequestPart(required = false) String username, Principal principal) {
         return userService.save(file, username, principal);
     }
 }
