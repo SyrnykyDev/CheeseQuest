@@ -43,15 +43,16 @@ public class LoginController {
         var user = userService.findByEmail(loginDto.getEmail());
         if (user != null) {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-            setCookie(user, response);
+            var token = jwtService.generateToken(user);
+            setCookie(token, response);
+            return ResponseEntity.ok(token);
         } else {
             throw new RuntimeException("no user found");
         }
-        return ResponseEntity.ok(user);
     }
 
-    private void setCookie(User user, HttpServletResponse response) {
-        var token = jwtService.generateToken(user);
+    private void setCookie(String token, HttpServletResponse response) {
+//        var token = jwtService.generateToken(user);
         Cookie cookie = createCookie(token);
         response.addCookie(cookie);
     }
