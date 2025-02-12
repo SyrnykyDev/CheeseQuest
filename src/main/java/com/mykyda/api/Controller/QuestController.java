@@ -36,15 +36,18 @@ public class QuestController {
     public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id,Principal principal) {
         var quest = questService.findObjectById(id);
         var reviews = reviewService.getReviewsByQuestId(id);
+        var user = userService.findByEmail(principal.getName());
+        var author = authorService.findById(user.getId());
         var isAuthor = false;
         if (principal != null) {
-            if (userService.findByEmail(principal.getName()).getId() == quest.getAuthorId()) {
+            if (author.getIdUser() == quest.getAuthorId()) {
                 isAuthor = true;
             }
         }
         Map<String, Object> response = new HashMap<>();
         response.put("quest",quest);
         response.put("reviews",reviews);
+        response.put("author",author);
         response.put("isAuthor",isAuthor);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
