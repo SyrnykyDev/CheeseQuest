@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/quest")
@@ -35,12 +32,19 @@ public class QuestController {
     private final ReviewService reviewService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
-        var quest = questService.findById(id);
+    public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id,Principal principal) {
+        var quest = questService.findObjectById(id);
         var reviews = reviewService.getReviewsByQuestId(id);
+        var isAuthor = false;
+        if (principal != null) {
+            if (userService.findByEmail(principal.getName()).getId() == quest.getAuthorId()) {
+                isAuthor = true;
+            }
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("quest",quest);
         response.put("reviews",reviews);
+        response.put("isAuthor",isAuthor);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

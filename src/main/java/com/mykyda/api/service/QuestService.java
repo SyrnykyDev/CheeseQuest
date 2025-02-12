@@ -36,6 +36,10 @@ public class QuestService {
 //        }
     }
 
+    public Quest findObjectById(Long id) {
+        return questRepository.findById(id).orElse(null);
+    }
+
     public Quest create(String name, String desc, MultipartFile media, Integer timeLimit, Long authorId) {
         var savedMedia = mediaService.uploadQuestMedia(media);
         var quest = Quest.builder()
