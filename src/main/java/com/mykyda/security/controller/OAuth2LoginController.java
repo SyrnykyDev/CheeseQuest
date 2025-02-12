@@ -25,7 +25,7 @@ public class OAuth2LoginController {
     @GetMapping("/success")
     public ResponseEntity<?> onOAuth2LoginSuccess(HttpServletResponse response) {
         OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        String email = authenticationToken.getPrincipal().getName();
+        String email = authenticationToken.getName();
         System.out.println(authenticationToken.getName());
         System.out.println(authenticationToken.getPrincipal().getName());
         System.out.println(authenticationToken.isAuthenticated());
