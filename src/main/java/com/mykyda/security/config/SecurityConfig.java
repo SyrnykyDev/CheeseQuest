@@ -69,6 +69,9 @@ public class SecurityConfig {
 //                .oauth2Login(login -> login
 //                        .permitAll()
 //                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService())));
+//                .oauth2Login(oa -> oa
+//                    .loginPage("/api/auth/login")
+//                    .defaultSuccessUrl("/api/auth/oauth2/success"));
         return http.build();
     }
 
@@ -76,8 +79,8 @@ public class SecurityConfig {
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         return userRequest -> {
             String email = userRequest.getIdToken().getClaim("email");
-            if (userService.findByEmail(email)==null){
-                  userService.create(userRequest.getIdToken().getClaims());
+            if (userService.findByEmail(email) == null) {
+                userService.create(userRequest.getIdToken().getClaims());
             }
             UserDetails userDetails = userService.loadUserByUsername(email);
             var oidcUser = new DefaultOidcUser(userDetails.getAuthorities(), userRequest.getIdToken());

@@ -1,6 +1,5 @@
 package com.mykyda.api.controller;
 
-import com.mykyda.api.dto.ProfileEditDto;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,9 @@ public class UserController {
 
     //ToDo:type validation
     @PostMapping("/edit")
-    public ResponseEntity<?> postProfileEdit(@RequestPart(required = false) MultipartFile file, @RequestPart(required = false) String username, Principal principal) {
+    public ResponseEntity<?> postProfileEdit(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "username", required = false) String username, Principal principal) {
         return userService.save(file, username, principal);
     }
 }
