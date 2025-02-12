@@ -21,4 +21,5 @@ public class Quest {
     private int timeLimit;
     private Long authorId;
     private int rating;
+    private String image;
 }

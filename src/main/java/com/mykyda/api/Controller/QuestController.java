@@ -1,15 +1,12 @@
 package com.mykyda.api.controller;
 
 import com.mykyda.api.database.entity.Author;
-import com.mykyda.api.database.entity.Quest;
 import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.QuestService;
 import com.mykyda.api.service.TaskService;
 import com.mykyda.api.dto.QuestCreationDto;
-import com.mykyda.api.dto.QuestEditDto;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Collection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quest")
@@ -86,12 +82,12 @@ public class QuestController {
         var user = userService.findByEmail(principal.getName());
         var author = (Author) authorService.checkAndCreate(user.getId()).getBody();
         authorService.incrementProjectAmount(author);
-        var savedQuest = questService.create(qcDto,principal,author.getIdUser());
-        var tasks = qcDto.getTasks();
-        if (!tasks.isEmpty()) {
-            taskService.saveAllTasks(tasks,author.getIdUser(),savedQuest.getId());
-        }
-        return new ResponseEntity<>(Collections.singletonMap("message","quest created"),HttpStatus.OK);
+        var savedQuest = questService.create(qcDto, author.getIdUser());
+//        var tasks = qcDto.getTasks();
+//        if (!tasks.isEmpty()) {
+//            taskService.saveAllTasks(tasks,author.getIdUser(),savedQuest.getId());
+//        }
+        return new ResponseEntity<>(savedQuest.getId(),HttpStatus.OK);
     }
 
 

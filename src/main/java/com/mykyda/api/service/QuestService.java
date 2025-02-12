@@ -6,16 +6,13 @@ import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.api.dto.QuestDemoDto;
 import com.mykyda.api.dto.QuestEditDto;
 import com.mykyda.api.dto.UserDemoDto;
-import com.mykyda.security.database.entity.User;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Collections;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +33,7 @@ public class QuestService {
     }
 
     //ToDO::timeLimit 0
-    public Quest create(QuestCreationDto qcDto, Principal principal, Long authorId) {
+    public Quest create(QuestCreationDto qcDto, Long authorId) {
         var timeLimit = 0;
         var quest = Quest.builder()
                 .authorId(authorId)

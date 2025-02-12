@@ -18,6 +18,4 @@ public class QuestCreationDto {
     String description;
 
     int rating = 0;
-
-    List<TaskCreationDto> tasks;
 }
