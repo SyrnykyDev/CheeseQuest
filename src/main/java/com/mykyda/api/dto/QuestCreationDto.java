@@ -18,10 +18,6 @@ public class QuestCreationDto {
 
     String description;
 
-    int timeLimit;
-
-    Long authorId;
-
     int rating = 0;
 
     List<Task> tasks;

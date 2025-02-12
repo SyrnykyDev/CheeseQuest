@@ -1,6 +1,7 @@
 package com.mykyda.api.controller;
 
 import com.mykyda.api.database.entity.Quest;
+import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.QuestService;
 import com.mykyda.api.service.TaskService;
 import com.mykyda.api.dto.QuestCreationDto;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -23,6 +25,8 @@ public class QuestController {
     private final QuestService questService;
 
     private final TaskService taskService;
+
+    private final AuthorsService authorService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
@@ -74,12 +78,14 @@ public class QuestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuest(@RequestBody QuestCreationDto qcDto) {
-        var savedQuest = questService.create(qcDto);
+    public ResponseEntity<?> createQuest(@RequestBody QuestCreationDto qcDto, Principal principal) {
+        //authorService.checkAndCreate(principal.getName());
+        var savedQuest = questService.create(qcDto,principal);
         var tasks = qcDto.getTasks();
         if (!tasks.isEmpty()) {
             tasks.forEach(task -> task.setQuestId(savedQuest.getId()));
+            taskService.saveAllTasks(tasks);
         }
-        return taskService.saveAllTasks(tasks);
+        return new ResponseEntity<>(Collections.singletonMap("message","quest created"),HttpStatus.OK);
     }
 }

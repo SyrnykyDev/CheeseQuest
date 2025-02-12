@@ -18,14 +18,9 @@ public class Task {
 
     private Long questId;
 
+    private String question;
+
     private String answer;
 
     private String type;
-
-    private int screenWidth;
-
-    private int screenHeight;
-
-    @Column(name = "objects_position")
-    private String objectsPosition;
 }

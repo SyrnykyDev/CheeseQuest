@@ -4,11 +4,13 @@ import com.mykyda.api.database.entity.Quest;
 import com.mykyda.api.database.repository.QuestRepository;
 import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.api.dto.QuestEditDto;
+import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Collections;
 
 @Service
@@ -16,6 +18,7 @@ import java.util.Collections;
 public class QuestService {
 
     private final QuestRepository questRepository;
+    private final UserService userService;
 
     public ResponseEntity<?> findById(Long id) {
         var quest = questRepository.findById(id).get();
@@ -27,13 +30,17 @@ public class QuestService {
         }
     }
 
-    public Quest create(QuestCreationDto qcDto) {
+    //ToDO::timeLimit 0
+    public Quest create(QuestCreationDto qcDto, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+        var timeLimit = 0;
         var quest = Quest.builder()
-                .authorId(qcDto.getAuthorId())
+                .authorId(user.getId())
                 .description(qcDto.getDescription())
                 .name(qcDto.getName())
                 .rating(qcDto.getRating())
-                .timeLimit(qcDto.getTimeLimit()).build();
+                .timeLimit(timeLimit)
+                .build();
         return questRepository.save(quest);
     }
 
