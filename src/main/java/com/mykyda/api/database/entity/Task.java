@@ -23,4 +23,5 @@ public class Task {
     private String answer;
 
     private String type;
+
 }

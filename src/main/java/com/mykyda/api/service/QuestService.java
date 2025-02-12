@@ -18,7 +18,6 @@ import java.util.Collections;
 public class QuestService {
 
     private final QuestRepository questRepository;
-    private final UserService userService;
 
     public ResponseEntity<?> findById(Long id) {
         var quest = questRepository.findById(id).get();
@@ -31,11 +30,10 @@ public class QuestService {
     }
 
     //ToDO::timeLimit 0
-    public Quest create(QuestCreationDto qcDto, Principal principal) {
-        var user = userService.findByEmail(principal.getName());
+    public Quest create(QuestCreationDto qcDto, Principal principal,Long authorId) {
         var timeLimit = 0;
         var quest = Quest.builder()
-                .authorId(user.getId())
+                .authorId(authorId)
                 .description(qcDto.getDescription())
                 .name(qcDto.getName())
                 .rating(qcDto.getRating())

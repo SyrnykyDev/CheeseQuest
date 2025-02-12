@@ -1,11 +1,13 @@
 package com.mykyda.api.controller;
 
+import com.mykyda.api.database.entity.Author;
 import com.mykyda.api.database.entity.Quest;
 import com.mykyda.api.service.AuthorsService;
 import com.mykyda.api.service.QuestService;
 import com.mykyda.api.service.TaskService;
 import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.api.dto.QuestEditDto;
+import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.mapping.Collection;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class QuestController {
     private final TaskService taskService;
 
     private final AuthorsService authorService;
+
+    private final UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
@@ -79,8 +83,10 @@ public class QuestController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuest(@RequestBody QuestCreationDto qcDto, Principal principal) {
-        //authorService.checkAndCreate(principal.getName());
-        var savedQuest = questService.create(qcDto,principal);
+        var user = userService.findByEmail(principal.getName());
+        var author = (Author) authorService.checkAndCreate(user.getId()).getBody();
+        authorService.incrementProjectAmount(author);
+        var savedQuest = questService.create(qcDto,principal,author.getIdUser());
         var tasks = qcDto.getTasks();
         if (!tasks.isEmpty()) {
             tasks.forEach(task -> task.setQuestId(savedQuest.getId()));

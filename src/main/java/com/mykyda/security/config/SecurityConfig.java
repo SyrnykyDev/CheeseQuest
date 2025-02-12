@@ -58,8 +58,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/quest/all","api/profile/{id}/quests").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/profile/**").permitAll()  // Додано публічний шлях
+                        .requestMatchers("/api/quests/all", "api/profile/{id}/quests").permitAll()
+                        .anyRequest().authenticated()  // Всі інші шляхи потребують аутентифікації
                 )
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

@@ -16,6 +16,11 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
   flyway:
+    enabled: true
+    locations: classpath:db/migration
+    url: ${DB_URL}
+    user:  ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     baseline-on-migrate: true
   security:
     jwt:
