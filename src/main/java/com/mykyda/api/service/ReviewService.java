@@ -6,6 +6,8 @@ import com.mykyda.api.database.repository.ReviewRepository;
 import com.mykyda.api.dto.ReviewDto;
 import com.mykyda.security.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +19,13 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final QuestRepository questRepository;
 
-    public ReviewDto createReview(ReviewDto reviewDto) {
+    public ResponseEntity<?> createReview(ReviewDto reviewDto, Long userId) {
         Review review = Review.builder()
-                .user(userRepository.findById(reviewDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found")))
-                .quest(questRepository.findById(reviewDto.getQuestId()).orElseThrow(() -> new RuntimeException("Quest not found")))
-                .text(reviewDto.getText())
+                .user(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")))
+                .questId(reviewDto.getQuestId())
+                .text(reviewDto.getMessage())
                 .build();
-        reviewRepository.save(review);
-        return reviewDto;
+        return new ResponseEntity<>(reviewRepository.save(review), HttpStatus.OK);
     }
     public List<Review> getReviewsByQuestId(Long questId) {
         return reviewRepository.findAllByQuestId(questId).orElseThrow(() -> new RuntimeException("No reviews found for this quest"));

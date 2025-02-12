@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ReviewDto {
-    private Long userId;
+
     private Long questId;
-    private String text;
+
+    private String message;
 }
