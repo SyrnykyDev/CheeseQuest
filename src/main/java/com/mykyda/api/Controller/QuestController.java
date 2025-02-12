@@ -6,9 +6,13 @@ import com.mykyda.api.service.TaskService;
 import com.mykyda.api.dto.QuestCreationDto;
 import com.mykyda.api.dto.QuestEditDto;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.Collection;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -24,6 +28,34 @@ public class QuestController {
     public ResponseEntity<?> getQuest(@PathVariable(name = "id") Long id) {
         return questService.findById(id);
     }
+
+    @GetMapping("/{id}/start")
+    public ResponseEntity<?> start(@PathVariable(name = "id") Long id) {
+        var tasks = taskService.findAllByQuest(id);
+        if (!tasks.isEmpty()) {
+            var indexes = new ArrayList<Long>();
+            for (var i : tasks) {
+                indexes.add(i.getId());
+            }
+            return new ResponseEntity<>(indexes, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+//    @PostMapping("/{id}/start")
+//    public ResponseEntity<?> start(@PathVariable(name = "id") Long id) {
+//        var tasks = taskService.findAllByQuest(id);
+//        if (!tasks.isEmpty()) {
+//            var indexes = new ArrayList<Long>();
+//            for (var i : tasks) {
+//                indexes.add(i.getId());
+//            }
+//            return new ResponseEntity<>(indexes, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(Collections.singletonMap("message","can`t start quest with no tasks"), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @GetMapping("/edit/{id}")
     public Map<String, Object> getQuestToEdit(@PathVariable(name = "id") Long id) {

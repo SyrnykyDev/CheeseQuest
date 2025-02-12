@@ -1,17 +1,20 @@
 package com.mykyda.security.controller;
 
+import com.mykyda.security.database.entity.User;
+import com.mykyda.security.dto.AuthRespDto;
 import com.mykyda.security.dto.UserCreateDto;
+import com.mykyda.security.service.JwtService;
 import com.mykyda.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("api/registration")
+@Controller
+@RequestMapping("api/auth/registration")
 @RequiredArgsConstructor
 public class RegistrationController {
 
@@ -19,8 +22,11 @@ public class RegistrationController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> defaultRegistration(@RequestBody UserCreateDto userCreateDto){
-        var result = userService.register(userCreateDto.getUsername(),userCreateDto.getEmail(),userCreateDto.getPassword());
-        System.out.println(result);
-        return result;
+        User user = userService.register(userCreateDto.getUsername(), userCreateDto.getEmail(), userCreateDto.getPassword());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    @GetMapping()
+    public String getRegistration(){
+        return "registration";
     }
 }

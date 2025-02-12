@@ -24,10 +24,12 @@ repositories {
 }
 
 dependencies {
+    var jjwt = '0.11.5'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'software.amazon.awssdk:s3:2.29.0'
@@ -36,6 +38,9 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwt}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwt}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwt}"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.github.cdimascio:dotenv-java:3.1.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'

@@ -26,24 +26,25 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    final String defaultAvatar = "https://userprofilepicturesbucket.s3.eu-north-1.amazonaws.com/images/00cad4aa-db93-4920-aab6-3bc341b0fb87user.png";
+
     public User update(User user) {
         return user;
     }
 
 
-    public ResponseEntity<?> register(String username, String email, String password) {
+    public User register(String username, String email, String password) {
         if (userRepository.findByEmail(email).isEmpty()) {
             var user = User.builder()
                     .role(Role.USER)
                     .username(username)
                     .email(email)
-                    .avatar("https://media.istockphoto.com/id/587805156/uk/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D1%96-%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D0%B0-%D1%96%D0%BB%D1%8E%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F-%D0%BF%D1%80%D0%BE%D1%84%D1%96%D0%BB%D1%8E.jpg?s=2048x2048&w=is&k=20&c=KiYHL-WRDFc2zSv16pNkgHOEIBspZM0jIFVA7qZsOzI=")
+                    .avatar(defaultAvatar)
                     .password(passwordEncoder.encode(password))
                     .build();
-            userRepository.save(user);
-            return new ResponseEntity<>(Collections.singletonMap("message", "Користувач успішно зареєстрований"), HttpStatus.CREATED);
+            return userRepository.save(user);
         } else {
-            return new ResponseEntity<>(Collections.singletonMap("error", "Email вже використовується"), HttpStatus.CONFLICT);
+            return null;
         }
     }
 
@@ -53,7 +54,7 @@ public class UserService implements UserDetailsService {
                     .role(role)
                     .username("user" + System.currentTimeMillis() * email.hashCode() / 100000)
                     .email(email)
-                    .avatar("https://media.istockphoto.com/id/587805156/uk/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D1%96-%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D0%B0-%D1%96%D0%BB%D1%8E%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F-%D0%BF%D1%80%D0%BE%D1%84%D1%96%D0%BB%D1%8E.jpg?s=2048x2048&w=is&k=20&c=KiYHL-WRDFc2zSv16pNkgHOEIBspZM0jIFVA7qZsOzI=")
+                    .avatar(defaultAvatar)
                     .password(passwordEncoder.encode(password))
                     .build();
             userRepository.save(user);
@@ -84,7 +85,8 @@ public class UserService implements UserDetailsService {
                     , user.getUsername()
                     , user.getEmail()
                     , user.getRole()), HttpStatus.OK);
-        }}
+        }
+    }
 
     public ResponseEntity<?> create(Map<String, Object> claims) {
         var user = User.builder()
@@ -94,7 +96,7 @@ public class UserService implements UserDetailsService {
                 .username(claims.get("name").toString())
                 .password(passwordEncoder.encode(String.valueOf(System.currentTimeMillis() * claims.hashCode())))
                 .build();
-        return new ResponseEntity<>(Collections.singletonMap("message","user successfully created"), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap("message", "user successfully created"), HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> save(ProfileEditDto peDto, Principal principal) {
