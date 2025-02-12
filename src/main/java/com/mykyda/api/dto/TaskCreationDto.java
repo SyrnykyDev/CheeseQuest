@@ -1,9 +1,11 @@
 package com.mykyda.api.dto;
 
+import com.mykyda.api.database.entity.Task;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,13 +13,13 @@ import java.util.List;
 @FieldNameConstants
 @Getter
 @Setter
-public class QuestCreationDto {
+public class TaskCreationDto {
 
-    String name;
+    MultipartFile media;
 
-    String description;
+    String answer;
 
-    int rating = 0;
+    String type;
 
-    List<TaskCreationDto> tasks;
+    String question;
 }

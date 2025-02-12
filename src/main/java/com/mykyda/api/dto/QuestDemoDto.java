@@ -1,5 +1,6 @@
 package com.mykyda.api.dto;
 
+import com.mykyda.security.database.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
@@ -11,13 +12,14 @@ import java.util.List;
 @FieldNameConstants
 @Getter
 @Setter
-public class QuestCreationDto {
+public class QuestDemoDto {
+    Long id;
 
     String name;
 
     String description;
 
-    int rating = 0;
+    int rating;
 
-    List<TaskCreationDto> tasks;
+    UserDemoDto user;
 }

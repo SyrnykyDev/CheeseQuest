@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class Author {
     @Id
     private Long idUser;
+    private String username;
     private int sumScore;
     private int sumQuest;
 
