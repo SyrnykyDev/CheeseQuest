@@ -2,7 +2,13 @@
 
 Team Syrnyky: Mykyta, Dmytro, Vitaliy, Arsenii
 
-Demo: http://193.160.226.130:3002/ (We recommended to use the [Docker](run-with-docker) instead)
+Demo: http://193.160.226.130:3002/ \
+\
+We recommend you [run locally with Docker](#run-locally-with-docker)
+
+Example user: 
+- username: 8x1@gmail.com
+- password: 11111111
 
 Frontend Repository: https://github.com/SyrnykyDev/CheeseQuest-frontend
 
@@ -30,7 +36,7 @@ This project was created with Spring Boot
 - /api/user/edit [POST]
 
 
-## Run with Docker
+## Run locally with Docker
 
 <code> docker run --rm  -it -p 8080:8080 c455/api
  </code>
