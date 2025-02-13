@@ -2,7 +2,7 @@
 
 Team Syrnyky: Mykyta, Dmytro, Vitaliy, Arsenii
 
-Demo: http://193.160.226.130:3002/
+Demo: http://193.160.226.130:3002/ (We recommended to use the [Docker](run-with-docker) instead)
 
 Frontend Repository: https://github.com/SyrnykyDev/CheeseQuest-frontend
 
